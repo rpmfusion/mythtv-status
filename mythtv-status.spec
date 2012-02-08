@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	0.9.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Group:		Applications/Multimedia
 # Scripts claim to be under GPLv2 but COPYING and ChangeLog state license
@@ -66,6 +66,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.9.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Dec 16 2010 Jussi Lehtola <jussi.lehtola@iki.fi> - 0.9.0-5
 - Changed R: perl-net-UPnP to R: perl(MythTV).
 
