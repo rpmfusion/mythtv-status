@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	0.9.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Group:		Applications/Multimedia
 # Scripts claim to be under GPLv2 but COPYING and ChangeLog state license
@@ -66,6 +66,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sun Mar 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.9.0-7
+- Mass rebuilt for Fedora 19 Features
+
 * Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.9.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
