@@ -1,16 +1,13 @@
 Name:		mythtv-status
-Version:	0.9.0
-Release:	8%{?dist}
+Version:	0.10.4
+Release:	1%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Group:		Applications/Multimedia
-# Scripts claim to be under GPLv2 but COPYING and ChangeLog state license
-# is GPLv3. Contacted upstream, new release coming soon.
 License:	GPLv3
 URL:		http://www.etc.gen.nz/projects/mythtv/mythtv-status.html
-Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-0.9.0.tar.gz
+Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}.tar.gz
 # Patch for Fedora specifics
 Patch0:		mythtv-status-fedora.patch
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:	noarch
 
 # Requires not detected automatically
@@ -31,34 +28,32 @@ is based on /etc/motd.stub, added with the output of mythtv-status.
 %patch0 -p1
 
 %build
+# Nothing to do
 
 %install
 rm -rf %{buildroot} 
 
 # Install scripts
-mkdir -p %{buildroot}/%{_bindir}  %{buildroot}/%{_sbindir}
-install -p -m 755 bin/mythtv-status bin/mythtv_recording_{now,soon} %{buildroot}/%{_bindir}
-install -p -m 755 bin/mythtv-update-motd %{buildroot}/%{_sbindir}
+mkdir -p %{buildroot}%{_bindir}  %{buildroot}%{_sbindir}
+install -p -m 755 bin/mythtv-status bin/mythtv_recording_{now,soon} %{buildroot}%{_bindir}
+install -p -m 755 bin/mythtv-update-motd %{buildroot}%{_sbindir}
 
 # Man files
-mkdir -p %{buildroot}/%{_mandir}/man1
-install -p -m 644 man/* %{buildroot}/%{_mandir}/man1
+mkdir -p %{buildroot}%{_mandir}/man1
+install -p -m 644 man/* %{buildroot}%{_mandir}/man1
 
 # Sysconfig file
-mkdir -p %{buildroot}/%{_sysconfdir}/sysconfig
-echo -e "HOST=127.0.0.1\nUPDATEMOTD=no" > %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
+mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
+echo -e "HOST=127.0.0.1\nUPDATEMOTD=no" > %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
 # Cron file to update motd, doesn't do anything if not enabled in sysconfig
 mkdir -p %{buildroot}%{_sysconfdir}/cron.hourly
-echo -e "#!/bin/sh\n/usr/sbin/mythtv-update-motd" > %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
+echo -e "#!/bin/sh\n%{_sbindir}/mythtv-update-motd" > %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
-%doc ChangeLog COPYING FAQ README THANKS
+%doc ChangeLog FAQ README THANKS
+%license COPYING
 %{_bindir}/mythtv*
 %{_sbindir}/mythtv*
 %{_mandir}/man1/mythtv*.1.gz
@@ -66,6 +61,11 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Thu Feb 25 2016 Antonio Trande <sagitter@fedoraproject.org> - 0.10.4-1
+- Update to 0.10.4
+- Use %%license tag
+- Patch updated
+
 * Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 0.9.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

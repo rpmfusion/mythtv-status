@@ -35,7 +35,7 @@ diff -up mythtv-status-0.9.0/bin/mythtv_recording_soon.orig mythtv-status-0.9.0/
 diff -up mythtv-status-0.9.0/bin/mythtv-update-motd.orig mythtv-status-0.9.0/bin/mythtv-update-motd
 --- mythtv-status-0.9.0/bin/mythtv-update-motd.orig	2008-07-11 01:13:30.000000000 +0300
 +++ mythtv-status-0.9.0/bin/mythtv-update-motd	2009-04-13 11:29:30.000000000 +0300
-@@ -1,16 +1,33 @@
+@@ -1,17 +1,29 @@
  #!/bin/bash
  
 -. /etc/default/mythtv-status
@@ -64,14 +64,10 @@ diff -up mythtv-status-0.9.0/bin/mythtv-update-motd.orig mythtv-status-0.9.0/bin
 +fi
  
 -cp /var/run/motd.orig /var/run/motd.new
--if mythtv-status $ARGS -h $HOST >> /var/run/motd.new
-+# Add mythtv status to end of stub
-+if mythtv-status $ARGS -h $HOST >> /tmp/motd.new
- then
--  mv /var/run/motd.new /var/run/motd
-+  cp /tmp/motd.new /etc/motd # If succesful, replace motd
-+fi
-+
-+if [ -f /tmp/motd.new ]; then
-+ rm /tmp/motd.new
+ ret=0
+-mythtv-status $ARGS -h $HOST >> /var/run/motd.new 2> /dev/null || ret=$?
++mythtv-status $ARGS -h $HOST >> /tmp/motd.new 2> /dev/null || ret=$?
+ if [ $ret -eq 0 -o $ret -eq 1 ]; then
+-  [ -f /var/run/motd.new ] && mv /var/run/motd.new /var/run/motd
++  [ -f /tmp/motd.new ] && mv /tmp/motd.new /etc/motd
  fi
