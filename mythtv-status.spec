@@ -1,14 +1,17 @@
 Name:		mythtv-status
 Version:	0.10.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
-Group:		Applications/Multimedia
+Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPLv3
 URL:		http://www.etc.gen.nz/projects/mythtv/mythtv-status.html
 Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}.tar.gz
 # Patch for Fedora specifics
 Patch0:		mythtv-status-fedora.patch
+Patch1:		mythtv-status-update-motd.patch
 BuildArch:	noarch
+# For pod2man
+BuildRequires:	perl-podlators
 
 # Requires not detected automatically
 Requires:	mythtv-backend
@@ -23,16 +26,25 @@ If you want to enable motd update, edit /etc/sysconfig/mythtv-status and change
 UPDATEMOTD=no to UPDATEMOTD=yes. The update is run hourly. The resulting motd
 is based on /etc/motd.stub, added with the output of mythtv-status.
 
+%description -l sv
+Detta Perl-skript kommer visa den aktuella statusen för ett MythTV-system på
+kommandoraden.  Möjligheten finns även att lägga till statusen till dagens
+systemmeddelande (MOTD) med regelbundna intervaller.
+
+För att aktivera motd-uppdateringar redigerar man
+/etc/sysconfig/mythtv-status och ändrar UPDATEMOTD=no till UPDATEMOTD=yes.
+Uppdateringen körs en gång i timmen.  Den resulterande motd:n baseras på
+/etc/motd.stub med utskriften från mythtv-status tillagd.
+
 %prep
 %setup -q
-%patch0 -p1
+%patch0 -p1 -b .orig
+%patch1 -p1 -b .fedora
 
 %build
-# Nothing to do
+pod2man bin/mythtv-status man/mythtv-status.1
 
 %install
-rm -rf %{buildroot} 
-
 # Install scripts
 mkdir -p %{buildroot}%{_bindir}  %{buildroot}%{_sbindir}
 install -p -m 755 bin/mythtv-status bin/mythtv_recording_{now,soon} %{buildroot}%{_bindir}
@@ -61,6 +73,12 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Tue Mar  8 2016 Göran Uddeborg <goeran@Uddeborg.se> - 0.10.4-2
+- Tweak the update-motd script adaption slightly
+- Generate a manual page for mythtv-status itself
+- Add Swedish description
+- Remove some specs no longer needed with current build systems.
+
 * Thu Feb 25 2016 Antonio Trande <sagitter@fedoraproject.org> - 0.10.4-1
 - Update to 0.10.4
 - Use %%license tag
