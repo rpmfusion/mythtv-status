@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	0.10.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPLv3
@@ -14,8 +14,11 @@ BuildArch:	noarch
 BuildRequires:	perl-podlators
 
 # Requires not detected automatically
-Requires:	mythtv-backend
 Requires:	perl(MythTV)
+
+# The backend needs to be running SOMEWHERE for mythtv-status to be useful, but
+# not necessarily on the same host.
+Recommends:	mythtv-backend
 
 %description
 This Perl script will display the current status of your MythTV system at the
@@ -73,6 +76,10 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Tue Jul 26 2016 Göran Uddeborg <goeran@Uddeborg.se> - 0.10.4-3
+- Make the backend dependency a recommendation only; mythtv-status is useful
+  on remote servers.
+
 * Tue Mar  8 2016 Göran Uddeborg <goeran@Uddeborg.se> - 0.10.4-2
 - Tweak the update-motd script adaption slightly
 - Generate a manual page for mythtv-status itself
