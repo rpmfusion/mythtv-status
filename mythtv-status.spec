@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	0.10.4
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPLv3
@@ -10,6 +10,8 @@ Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}
 Patch0:		mythtv-status-fedora.patch
 Patch1:		mythtv-status-update-motd.patch
 BuildArch:	noarch
+# For perl dependency auto-detection
+BuildRequires:	perl-generators
 # For pod2man
 BuildRequires:	perl-podlators
 
@@ -49,7 +51,7 @@ pod2man bin/mythtv-status man/mythtv-status.1
 
 %install
 # Install scripts
-mkdir -p %{buildroot}%{_bindir}  %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}%{_bindir} %{buildroot}%{_sbindir}
 install -p -m 755 bin/mythtv-status bin/mythtv_recording_{now,soon} %{buildroot}%{_bindir}
 install -p -m 755 bin/mythtv-update-motd %{buildroot}%{_sbindir}
 
@@ -76,6 +78,10 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Wed Oct 26 2016 Paul Howarth <paul@city-fan.org> - 0.10.4-4
+- BR: perl-generators for proper dependency generation
+  (https://fedoraproject.org/wiki/Changes/Build_Root_Without_Perl)
+
 * Tue Jul 26 2016 Göran Uddeborg <goeran@Uddeborg.se> - 0.10.4-3
 - Make the backend dependency a recommendation only; mythtv-status is useful
   on remote servers.
