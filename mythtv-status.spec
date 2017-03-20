@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	0.10.4
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPLv3
@@ -78,6 +78,9 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org>
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Oct 26 2016 Paul Howarth <paul@city-fan.org> - 0.10.4-4
 - BR: perl-generators for proper dependency generation
   (https://fedoraproject.org/wiki/Changes/Build_Root_Without_Perl)
