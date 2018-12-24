@@ -1,7 +1,13 @@
---- mythtv-status-0.10.4/bin/mythtv-update-motd.orig	2013-10-28 10:39:56.000000000 +0100
-+++ mythtv-status-0.10.4/bin/mythtv-update-motd	2016-03-07 22:10:12.000000000 +0100
-@@ -1,17 +1,28 @@
- #!/bin/bash
+--- mythtv-status-0.10.8/bin/mythtv-update-motd.orig	2018-12-23 15:52:58.351068982 +0000
++++ mythtv-status-0.10.8/bin/mythtv-update-motd	2018-12-24 00:29:02.533842709 +0000
+@@ -3,12 +3,12 @@
+ # Run mythtv-status to update the MOTD.
+ 
+ NAME=mythtv-update-motd
+-WORKFILE=/var/run/motd
+-TEMPFILE=/var/run/motd.mythtv-status
++WORKFILE=/etc/motd
++TEMPFILE=/etc/motd.mythtv-status
  
 -. /etc/default/mythtv-status
 +. /etc/sysconfig/mythtv-status
@@ -11,8 +17,11 @@
  then
    exit
  fi
+@@ -18,7 +18,16 @@ fi
  
--[ ! -f /var/run/motd.orig ] && cp /var/run/motd /var/run/motd.orig
+ # Just incase someone has removed their motd file.
+ [ -f $WORKFILE ] || touch $WORKFILE
+-[ -f /var/run/motd.orig ] || cp $WORKFILE /var/run/motd.orig
 +# Check if stub exists. If not, assume motd is OK to use as stub
 +if [ ! -f /etc/motd.stub ]; then
 +  if [ -f /etc/motd ]; then
@@ -24,14 +33,18 @@
 +
 +# Update motd:
  
+ # If the tempfile is less than 15 minutes old, object, otherwise
+ # we'll assume that something went wrong and remove it.
+@@ -31,9 +40,9 @@ if [ -f $TEMPFILE ]; then
+     fi
+ fi
+ 
+-[ ! -f /var/run/motd.orig ] && cp /var/run/motd /var/run/motd.orig
+-
 -cp /var/run/motd.orig /var/run/motd.new
 +# Insert stub
 +cp /etc/motd.stub /tmp/motd.new
 +# Add mythtv status to end of stub
  ret=0
--mythtv-status $ARGS -h $HOST >> /var/run/motd.new 2> /dev/null || ret=$?
-+mythtv-status $ARGS -h $HOST >> /tmp/motd.new || ret=$?
+ mythtv-status $ARGS -h $HOST >> $TEMPFILE 2> /dev/null || ret=$?
  if [ $ret -eq 0 -o $ret -eq 1 ]; then
--  [ -f /var/run/motd.new ] && mv /var/run/motd.new /var/run/motd
-+  [ -f /tmp/motd.new ] && mv /tmp/motd.new /etc/motd
- fi

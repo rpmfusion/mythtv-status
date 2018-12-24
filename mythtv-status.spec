@@ -1,6 +1,6 @@
 Name:		mythtv-status
-Version:	0.10.4
-Release:	9%{?dist}
+Version:	0.10.8
+Release:	1%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPLv3
@@ -78,6 +78,9 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sun Dec 23 2018 Sérgio Basto <sergio@serjux.com> - 0.10.8-1
+- Update to 0.10.8
+
 * Fri Jul 27 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.10.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
