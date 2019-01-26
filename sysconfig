@@ -1,0 +1,5 @@
+# Configurations for the update of /etc/motd
+# Set UPDATE_MOTD to "yes" to enable updates.
+UPDATE_MOTD=no
+# Talk the MythTV server on this host.
+HOST=127.0.0.1
