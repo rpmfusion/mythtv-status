@@ -1,5 +1,5 @@
 Name:		mythtv-status
-Version:	1.0.0
+Version:	1.0.1
 Release:	1%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
@@ -9,9 +9,6 @@ Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}
 Source1:	sysconfig
 # Patch for Fedora specifics
 Patch0:		mythtv-status-fedora.patch
-# Perl warns about uninitialized value in list assignment.
-# Reported upstreams via e-mail.
-Patch2:		mythtv-status-undefined.patch
 BuildArch:	noarch
 # For perl dependency auto-detection
 BuildRequires:	perl-generators
@@ -47,7 +44,6 @@ Uppdateringen körs en gång i timmen.  Den resulterande motd:n baseras på
 %prep
 %setup -q
 %patch0 -p1 -b .orig
-%patch2 -p1 -b .undefined
 
 %build
 pod2man bin/mythtv-status man/mythtv-status.1
@@ -81,6 +77,9 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sun Feb 17 2019 Göran Uddeborg <goeran@Uddeborg.se> - 1.0.1-1
+- Update to 1.0.1
+
 * Sat Jan 26 2019 Göran Uddeborg <goeran@Uddeborg.se> - 1.0.0-1
 - Update to 1.0.0
 
