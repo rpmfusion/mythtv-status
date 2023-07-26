@@ -1,19 +1,33 @@
 Name:		mythtv-status
-Version:	1.0.1
-Release:	9%{?dist}
+Version:	1.1.0
+Release:	1%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
-License:	GPLv3
+License:	GPL-3.0-only
 URL:		http://www.etc.gen.nz/projects/mythtv/mythtv-status.html
 Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}.tar.gz
 Source1:	sysconfig
 # Patch for Fedora specifics
 Patch0:		mythtv-status-fedora.patch
+# Reported upstreams via e-mail
+Patch1:		install-motdupdater.patch
+# Reported upstreams via e-mail
+Patch2:		default-localhost.patch
 BuildArch:	noarch
-# For perl dependency auto-detection
-BuildRequires:	perl-generators
+
+BuildRequires:	make
+# For tests
+BuildRequires: perl-Date-Manip
+BuildRequires: perl-ExtUtils-MakeMaker
+BuildRequires: perl-FindBin
+BuildRequires: perl-libwww-perl
+BuildRequires: perl-MIME-tools
+BuildRequires: perl-Test-Simple
+BuildRequires: perl-XML-LibXML
 # For pod2man
 BuildRequires:	perl-podlators
+# For _unitdir and script definitions
+BuildRequires:	systemd-rpm-macros
 
 # Requires not detected automatically
 Requires:	perl(MythTV)
@@ -27,45 +41,43 @@ This Perl script will display the current status of your MythTV system at the
 command line. It can optionally append it to the system message of the day
 (MOTD) on a regular basis.
 
-If you want to enable motd update, edit /etc/sysconfig/mythtv-status and change
-UPDATE_MOTD=no to UPDATE_MOTD=yes. The update is run hourly. The resulting motd
-is based on /etc/motd.stub, added with the output of mythtv-status.
+If you want to enable motd update, enable the systemd unit
+mythtv-status_update-motd.timer. The update is run quarterly. The
+resulting motd is based on /etc/motd.stub, added with the output of
+mythtv-status.
 
 %description -l sv
 Detta Perl-skript kommer visa den aktuella statusen för ett MythTV-system på
 kommandoraden.  Möjligheten finns även att lägga till statusen till dagens
 systemmeddelande (MOTD) med regelbundna intervaller.
 
-För att aktivera motd-uppdateringar redigerar man
-/etc/sysconfig/mythtv-status och ändrar UPDATE_MOTD=no till UPDATE_MOTD=yes.
-Uppdateringen körs en gång i timmen.  Den resulterande motd:n baseras på
-/etc/motd.stub med utskriften från mythtv-status tillagd.
+För att aktivera motd-uppdateringar aktiverar man systemd-enheten
+mythtv-status_update-motd.timer. Uppdateringen körs en gång i kvarten.
+Den resulterande motd:n baseras på /etc/motd.stub med utskriften från
+mythtv-status tillagd.
 
 %prep
-%setup -q
-%patch0 -p1 -b .orig
+%autosetup -p1
 
 %build
-pod2man bin/mythtv-status man/mythtv-status.1
+%make_build
 
 %install
-# Install scripts
-mkdir -p %{buildroot}%{_bindir} %{buildroot}%{_sbindir}
-install -p -m 755 bin/mythtv-status bin/mythtv_recording_{now,soon} %{buildroot}%{_bindir}
-install -p -m 755 bin/mythtv-update-motd %{buildroot}%{_sbindir}
-
-# Man files
-mkdir -p %{buildroot}%{_mandir}/man1
-install -p -m 644 man/* %{buildroot}%{_mandir}/man1
+%make_install 'MANDIR=$(DESTDIR)%_mandir' 'SYSTEMDDIR=$(DESTDIR)%_unitdir'
 
 # Sysconfig file
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
 install -p -m 644 %SOURCE1 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
-# Cron file to update motd, doesn't do anything if not enabled in sysconfig
-mkdir -p %{buildroot}%{_sysconfdir}/cron.hourly
-echo -e "#!/bin/sh\n%{_sbindir}/mythtv-update-motd" > %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
-chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
+%post
+%systemd_post mythtv-status_health-check.timer mythtv-status_update-motd.timer
+
+%preun
+%systemd_preun mythtv-status_health-check.timer mythtv-status_update-motd.timer
+
+%postun
+%systemd_postun_with_restart mythtv-status_health-check.timer mythtv-status_update-motd.timer
+
 
 %files
 %doc ChangeLog FAQ README THANKS
@@ -73,10 +85,19 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %{_bindir}/mythtv*
 %{_sbindir}/mythtv*
 %{_mandir}/man1/mythtv*.1.gz
-%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
+%{_mandir}/man8/mythtv-update-motd.8.gz
+%{_libexecdir}/%{name}
+%{_unitdir}/*
 %config %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Wed Jul 26 2023 Göran Uddeborg <goeran@uddeborg.se> - 1.1.0-1
+- Update to 1.1.0
+- Use the now provided make target to install rather than our own scripting
+- Use the now provided systemd timers rather than our own cron configuration
+- Change license tag to SPDX format
+- Run tests during build
+
 * Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.0.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1

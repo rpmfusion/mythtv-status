@@ -1,0 +1,26 @@
+--- mythtv-status-1.1.0/Makefile.orig	2023-07-22 14:17:03.000000000 +0200
++++ mythtv-status-1.1.0/Makefile	2023-07-25 20:56:28.000000000 +0200
+@@ -1,6 +1,7 @@
+ #!/usr/bin/make -f
+ 
+ BINDIR=$(DESTDIR)/usr/bin
++SBINDIR=$(DESTDIR)/usr/sbin
+ LIBEXECDIR=$(DESTDIR)/usr/libexec/mythtv-status
+ MANDIR=$(DESTDIR)/usr/man
+ SYSTEMDDIR=$(DESTDIR)/lib/systemd/system
+@@ -71,6 +72,7 @@
+ 
+ install:
+ 	install -d $(BINDIR)
++	install -d $(SBINDIR)
+ 	install -d $(LIBEXECDIR)
+ 	install -d $(MANDIR)/man1
+ 	install -d $(MANDIR)/man8
+@@ -78,6 +80,7 @@
+ 	install -m 775 bin/mythtv-status $(BINDIR)
+ 	install -m 775 bin/mythtv_recording_now $(BINDIR)
+ 	install -m 775 bin/mythtv_recording_soon $(BINDIR)
++	install -m 775 bin/mythtv-update-motd $(SBINDIR)
+ 	install -m 775 bin/health-check $(LIBEXECDIR)
+ 	pod2man bin/mythtv-status > $(MANDIR)/man1/mythtv-status.1
+ 	install -m 644 man/mythtv-update-motd.8 $(MANDIR)/man8

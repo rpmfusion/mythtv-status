@@ -1,0 +1,22 @@
+--- mythtv-status-1.1.0/bin/health-check.fedora	2023-07-26 10:31:31.000000000 +0200
++++ mythtv-status-1.1.0/bin/health-check	2023-07-26 10:35:29.000000000 +0200
+@@ -15,7 +15,7 @@
+   exit
+ fi
+ 
+-/usr/bin/mythtv-status --host "$HOST" --email "$EMAIL" "$EMAIL_ARGS"
++/usr/bin/mythtv-status --host "${HOST:-localhost}" --email "$EMAIL" "$EMAIL_ARGS"
+ 
+ # Keep things happy by always having a return code of 0.
+ exit 0
+--- mythtv-status-1.1.0/bin/mythtv-update-motd.orig	2023-07-22 14:17:03.000000000 +0200
++++ mythtv-status-1.1.0/bin/mythtv-update-motd	2023-07-26 10:35:30.000000000 +0200
+@@ -82,7 +82,7 @@
+ [ "$UPDATE_MOTD_ARGS" = "" ] && UPDATE_MOTD_ARGS=$ARGS
+ 
+ ret=0
+-mythtv-status $UPDATE_MOTD_ARGS -h $HOST >> $TEMPFILE || ret=$?
++mythtv-status $UPDATE_MOTD_ARGS -h "${HOST:-localhost}" >> $TEMPFILE || ret=$?
+ if [ $ret -eq 0  ] || [ $ret -eq 1 ]; then
+   if [ ! -f $TEMPFILE ]; then
+     echo My temporary file has gone away, failed.

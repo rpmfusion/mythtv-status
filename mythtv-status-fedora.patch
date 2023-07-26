@@ -14,7 +14,7 @@ diff -up mythtv-status-0.9.0/bin/mythtv_recording_now.orig mythtv-status-0.9.0/b
 +  . /etc/sysconfig/mythtv-status
  fi
  
- /usr/bin/mythtv-status -h ${HOST:=localhost} --return-code-only --recording-now
+ /usr/bin/mythtv-status -h "${HOST:=localhost}" --return-code-only --recording-now
 diff -up mythtv-status-0.9.0/bin/mythtv_recording_soon.orig mythtv-status-0.9.0/bin/mythtv_recording_soon
 --- mythtv-status-0.9.0/bin/mythtv_recording_soon.orig	2008-07-11 01:13:30.000000000 +0300
 +++ mythtv-status-0.9.0/bin/mythtv_recording_soon	2009-04-11 11:39:10.000000000 +0300
@@ -32,4 +32,34 @@ diff -up mythtv-status-0.9.0/bin/mythtv_recording_soon.orig mythtv-status-0.9.0/
  fi
  
  if [ "x$1" != "x" ]
-diff -up mythtv-status-0.9.0/bin/mythtv-update-motd.orig mythtv-status-0.9.0/bin/mythtv-update-motd
+--- mythtv-status-1.1.0/man/mythtv-update-motd.8.orig	2023-07-22 14:17:03.000000000 +0200
++++ mythtv-status-1.1.0/man/mythtv-update-motd.8	2023-07-26 10:17:03.000000000 +0200
+@@ -24,7 +24,7 @@
+ typically run from cron.
+ .SH CONFIGURATION
+ The configuration file for this script is
+-.I /etc/default/mythtv-status
++.I /etc/sysconfig/mythtv-status
+ options of interest:
+ .TP
+ .B HOST
+@@ -61,7 +61,7 @@
+ .B 1
+ Failed to update MOTD with MythTV status
+ .SH FILES
+-.B /etc/default/mythtv-status
++.B /etc/sysconfig/mythtv-status
+ Config file
+ .SH SEE ALSO
+ .BR mythtv-status (1),
+--- mythtv-status-1.1.0/bin/health-check.orig	2023-07-22 14:17:03.000000000 +0200
++++ mythtv-status-1.1.0/bin/health-check	2023-07-26 10:29:39.000000000 +0200
+@@ -8,7 +8,7 @@
+ #
+ # Run mythtv-status to perform a health check of the MythTV system.
+ 
+-. /etc/default/mythtv-status
++. /etc/sysconfig/mythtv-status
+ 
+ if [ "$EMAIL" = "" ] || [ "$EMAIL" = "none" ]
+ then
