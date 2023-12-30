@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	1.0.1
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPLv3
@@ -9,6 +9,9 @@ Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}
 Source1:	sysconfig
 # Patch for Fedora specifics
 Patch0:		mythtv-status-fedora.patch
+# To match a corresponding patch in the base mythtv package; it reports in GB
+# rather than MB as upstreams.
+Patch3:		mythtv-space_in_GB.patch
 BuildArch:	noarch
 # For perl dependency auto-detection
 BuildRequires:	perl-generators
@@ -44,6 +47,7 @@ Uppdateringen körs en gång i timmen.  Den resulterande motd:n baseras på
 %prep
 %setup -q
 %patch0 -p1 -b .orig
+%patch3 -p1 -b .orig
 
 %build
 pod2man bin/mythtv-status man/mythtv-status.1
@@ -77,6 +81,10 @@ chmod 755  %{buildroot}%{_sysconfdir}/cron.hourly/mythtv-update-motd.cron
 %config %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sat Dec 30 2023 Göran Uddeborg <goeran@uddeborg.se> - 1.0.1-10
+- Patch to expect GB in status reports, matching a patch in the base mythtv
+  package
+
 * Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.0.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1

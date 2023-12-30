@@ -1,0 +1,90 @@
+--- mythtv-status-1.1.0/bin/mythtv-status.orig	2023-07-22 14:17:03.000000000 +0200
++++ mythtv-status-1.1.0/bin/mythtv-status	2023-12-30 22:36:43.000000000 +0100
+@@ -90,20 +90,13 @@
+ my @size_thresholds = (
+   {
+     'unit' => 'TB',
+-    'threshold' => 1024 * 1024,
+-    'conversion' => 1024 * 1024,
+-    'make_integer' => 1,
+-    'make_integer_threshold' => 500,
+-  },
+-  {
+-    'unit' => 'GB',
+-    'threshold' => 50 * 1024,        # 50GB seems like a good threshold.
++    'threshold' => 50 * 1024,
+     'conversion' => 1024,
+     'make_integer' => 1,
+     'make_integer_threshold' => 500,
+   },
+   {
+-    'unit' => 'MB',
++    'unit' => 'GB',
+   },
+ );
+ 
+--- mythtv-status-1.1.0/t/05-v0.20-clean.t.orig	2023-07-22 14:17:03.000000000 +0200
++++ mythtv-status-1.1.0/t/05-v0.20-clean.t	2023-12-30 22:58:41.000000000 +0100
+@@ -13,7 +13,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ like($out, qr/^Status as of\.*: Thu Nov 29 2007, 6:43 PM$/m, 'Status line is present');
+-like($out, qr/^Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is present');
++like($out, qr/^Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is present');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ like($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is present, and recording');
+ like($out, qr/^Recording Now:\s+3 News \(TV3\), Ends: 19:00:00$/m, 'Recording now is present (the news)');
+@@ -24,7 +24,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ unlike($out, qr/^Status as of\.*:/m, 'Status line is not present');
+-like($out, qr/^Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is present');
++like($out, qr/^Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is present');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ like($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is present, and recording');
+ like($out, qr/^Recording Now:\s+3 News \(TV3\), Ends: 19:00:00$/m, 'Recording now is present (the news)');
+@@ -35,7 +35,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ like($out, qr/^Status as of\.*: Thu Nov 29 2007, 6:43 PM$/m, 'Status line is present');
+-unlike($out, qr/^Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is not present');
++unlike($out, qr/^Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is not present');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ like($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is present, and recording');
+ like($out, qr/^Recording Now:\s+3 News \(TV3\), Ends: 19:00:00$/m, 'Recording now is present (the news)');
+@@ -46,7 +46,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ like($out, qr/^Status as of\.*: Thu Nov 29 2007, 6:43 PM$/m, 'Status line is present');
+-like($out, qr/^Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is present');
++like($out, qr/^Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is present');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ unlike($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is not present');
+ like($out, qr/^Recording Now:\s+3 News \(TV3\), Ends: 19:00:00$/m, 'Recording now is present (the news)');
+@@ -57,7 +57,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ like($out, qr/^Status as of\.*: Thu Nov 29 2007, 6:43 PM$/m, 'Status line is present');
+-like($out, qr/^Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is present');
++like($out, qr/^Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is present');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ like($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is present, and recording');
+ unlike($out, qr/^Recording Now:\s+3 News \(TV3\) Ends: 19:00:00$/m, 'Recording now is not present');
+@@ -70,7 +70,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ like($out, qr/^Status as of\.*: Thu Nov 29 2007, 6:43 PM$/m, 'Status line is present');
+-like($out, qr/^Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is present');
++like($out, qr/^Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is present');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ like($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is present, and recording');
+ like($out, qr/^Recording Now:\s+3 News \(TV3\), Enc: 9, Chan: 3, Ends: 19:00:00$/m, 'Recording now is present (the news) with encoder details');
+@@ -83,7 +83,7 @@
+ 
+ like($out, qr/MythTV status for localhost/, 'Header is present');
+ like($out, qr/^\* Status as of\.*: Thu Nov 29 2007, 6:43 PM$/m, 'Status line is present (with bullet)');
+-like($out, qr/^\* Total Disk Space: Total space is 100 GB, with 72\.2 GB used \(72%\)$/m, 'Total disk space is present (with bullet)');
++like($out, qr/^\* Total Disk Space: Total space is 100 TB, with 72\.2 TB used \(72%\)$/m, 'Total disk space is present (with bullet)');
+ unlike($out, qr/^Guide Data\.*:/m, 'Guide data warning is not present');
+ like($out, qr/^Encoders:\s+cerberus \(9\) - Recording$/m, 'Encoder is present, and recording');
+ like($out, qr/^Recording Now:\s+3 News \(TV3\), Ends: 19:00:00$/m, 'Recording now is present (the news)');
