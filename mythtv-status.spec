@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	1.1.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPL-3.0-only
@@ -13,6 +13,9 @@ Patch0:		mythtv-status-fedora.patch
 Patch1:		install-motdupdater.patch
 # Reported upstreams via e-mail
 Patch2:		default-localhost.patch
+# To match a corresponding patch in the base mythtv package; it reports in GB
+# rather than MB as upstreams.
+Patch3:		mythtv-space_in_GB.patch
 BuildArch:	noarch
 
 BuildRequires:	make
@@ -91,6 +94,10 @@ install -p -m 644 %SOURCE1 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 %config %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sat Dec 30 2023 Göran Uddeborg <goeran@uddeborg.se> - 1.1.0-2
+- Patch to expect GB in status reports, matching a patch in the base mythtv
+  package
+
 * Wed Jul 26 2023 Göran Uddeborg <goeran@uddeborg.se> - 1.1.0-1
 - Update to 1.1.0
 - Use the now provided make target to install rather than our own scripting
