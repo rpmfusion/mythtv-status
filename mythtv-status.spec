@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	1.1.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPL-3.0-only
@@ -92,6 +92,9 @@ install -p -m 644 %SOURCE1 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 %config %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
 * Thu Jan 04 2024 Göran Uddeborg <goeran@uddeborg.se> - 1.1.0-3
 - Undo the previous patch, a better fix is done in the base mythtv
   package.
