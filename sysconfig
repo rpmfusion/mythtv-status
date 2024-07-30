@@ -1,7 +1,7 @@
 # Configurations for the update of /etc/motd
 # Set UPDATE_MOTD to "yes" to enable updates.
 UPDATE_MOTD=yes
-# Specify a different defult host than localhost.
+# Specify a different default host than localhost.
 # HOST=example.com
 # Address to send health check results to.
 # EMAIL=user@example.com
