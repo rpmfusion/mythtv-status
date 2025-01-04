@@ -1,22 +1,21 @@
 Name:		mythtv-status
-Version:	1.1.0
-Release:	5%{?dist}
+Version:	1.2.0
+Release:	1%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPL-3.0-only
 URL:		http://www.etc.gen.nz/projects/mythtv/mythtv-status.html
 Source0:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}.tar.gz
-Source1:	sysconfig
+Source1:	http://www.etc.gen.nz/projects/mythtv/tarballs/mythtv-status-%{version}.tar.gz.asc
+Source2:	http://www.etc.gen.nz/andrew/gpg-key-C603FC4E600F1CECD1C8D97C4B53D931E4D3E863.asc
+Source3:	sysconfig
 # Patch for Fedora specifics
 Patch0:		mythtv-status-fedora.patch
-# Reported upstreams via e-mail
-Patch1:		install-motdupdater.patch
-# Reported upstreams via e-mail
-Patch2:		default-localhost.patch
 
 BuildArch:	noarch
 
 BuildRequires:	make
+BuildRequires:	gnupg2
 # For tests
 BuildRequires: perl-Date-Manip
 BuildRequires: perl-ExtUtils-MakeMaker
@@ -58,17 +57,19 @@ Den resulterande motd:n baseras på /etc/motd.stub med utskriften från
 mythtv-status tillagd.
 
 %prep
+%{gpgverify} --keyring=%SOURCE2 --signature=%SOURCE1 --data=%SOURCE0
+ls -R
 %autosetup -p1
 
 %build
 %make_build
 
 %install
-%make_install 'MANDIR=$(DESTDIR)%_mandir' 'SYSTEMDDIR=$(DESTDIR)%_unitdir'
+%make_install
 
 # Sysconfig file
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-install -p -m 644 %SOURCE1 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -p -m 644 %SOURCE3 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
 %post
 %systemd_post mythtv-status_health-check.timer mythtv-status_update-motd.timer
@@ -89,9 +90,14 @@ install -p -m 644 %SOURCE1 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 %{_mandir}/man8/mythtv-update-motd.8.gz
 %{_libexecdir}/%{name}
 %{_unitdir}/*
-%config %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sat Jan  4 2025 Göran Uddeborg <goeran@uddeborg.se> - 1.2.0-1
+- Update to 1.2.0
+- Verify the signature of the code during the build
+- Remove a lot of patches that have moved upstream
+
 * Fri Aug 02 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.1.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
