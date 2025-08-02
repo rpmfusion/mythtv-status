@@ -64,7 +64,7 @@ mythtv-status tillagd.
 %make_build
 
 %install
-%make_install
+%make_install SBINDIR=%{_sbindir}
 
 # Sysconfig file
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
@@ -83,8 +83,9 @@ install -p -m 644 %SOURCE3 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 %files
 %doc ChangeLog FAQ README THANKS
 %license COPYING
-%{_bindir}/mythtv*
-%{_sbindir}/mythtv*
+%{_bindir}/mythtv-status
+%{_bindir}/mythtv_*
+%{_sbindir}/mythtv-update-motd
 %{_mandir}/man1/mythtv*.1.gz
 %{_mandir}/man8/mythtv-update-motd.8.gz
 %{_libexecdir}/%{name}
