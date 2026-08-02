@@ -1,6 +1,6 @@
 Name:		mythtv-status
 Version:	1.2.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Get the current status of your MythTV system at the command line
 Summary(sv):	Hämta ett MythTV-systems status på kommandoraden
 License:	GPL-3.0-only
@@ -93,6 +93,9 @@ install -p -m 644 %SOURCE3 %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %changelog
+* Sun Aug 02 2026 RPM Fusion Release Engineering <leigh123linux@rpmfusion.org> - 1.2.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+
 * Mon Feb 02 2026 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
 
